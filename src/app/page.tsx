@@ -1,19 +1,12 @@
-import { Footer } from '@/components/layout/footer'
-import { Header } from '@/components/layout/header'
-import { CTASection } from '@/components/sections/cta'
-import { FeaturesSection } from '@/components/sections/features'
-import { HeroSection } from '@/components/sections/hero'
+/**
+ * 루트 페이지
+ *
+ * 루트 경로(/) 접근 시 어드민 대시보드(/admin)로 리다이렉트합니다.
+ * 클라이언트는 직접 /invoice/[id] URL로 접근합니다.
+ */
 
-export default function Home() {
-  return (
-    <div className="flex min-h-screen flex-col">
-      <Header />
-      <main className="flex-1">
-        <HeroSection />
-        <FeaturesSection />
-        <CTASection />
-      </main>
-      <Footer />
-    </div>
-  )
+import { redirect } from 'next/navigation'
+
+export default function RootPage() {
+  redirect('/admin')
 }
