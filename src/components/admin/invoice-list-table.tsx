@@ -6,32 +6,11 @@
  */
 
 import type { InvoiceSummary } from '@/lib/types/invoice'
+import { formatDate, formatCurrency } from '@/lib/utils/format'
 import { CopyUrlButton } from './copy-url-button'
 
 interface InvoiceListTableProps {
   invoices: InvoiceSummary[]
-}
-
-/**
- * 날짜 문자열을 간략한 형식으로 변환합니다.
- * @example "2026-05-19" → "2026. 5. 19."
- */
-function formatDate(dateStr: string | null): string {
-  if (!dateStr) return '-'
-  return new Date(dateStr).toLocaleDateString('ko-KR')
-}
-
-/**
- * 금액을 통화 형식으로 변환합니다.
- */
-function formatCurrency(
-  amount: number,
-  currency: InvoiceSummary['currency']
-): string {
-  return new Intl.NumberFormat('ko-KR', {
-    style: 'currency',
-    currency,
-  }).format(amount)
 }
 
 export function InvoiceListTable({ invoices }: InvoiceListTableProps) {
