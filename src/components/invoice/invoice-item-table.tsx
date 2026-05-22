@@ -5,17 +5,10 @@
  */
 
 import type { InvoiceItem } from '@/lib/types/invoice'
+import { formatNumber } from '@/lib/utils/format'
 
 interface InvoiceItemTableProps {
   items: InvoiceItem[]
-}
-
-/**
- * 숫자를 천 단위 구분 기호로 포맷합니다.
- * @example 1500000 → "1,500,000"
- */
-function formatNumber(value: number): string {
-  return new Intl.NumberFormat('ko-KR').format(value)
 }
 
 export function InvoiceItemTable({ items }: InvoiceItemTableProps) {

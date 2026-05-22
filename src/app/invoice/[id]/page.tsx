@@ -34,11 +34,18 @@ export async function generateMetadata({
 
 export default async function InvoicePage({ params }: InvoicePageProps) {
   const { id } = await params
-  const invoice = await getInvoice(id)
+  let invoice = await getInvoice(id)
 
-  // 견적서가 존재하지 않으면 not-found.tsx 표시
+  // 견적서가 존재하지 않을 때의 처리
   if (!invoice) {
-    notFound()
+    if (process.env.NODE_ENV === 'development') {
+      // 개발환경에서는 더미 데이터로 렌더링 (Notion 연동 없이 UI 확인용)
+      const { MOCK_INVOICE } = await import('@/lib/mocks/invoice-mocks')
+      invoice = MOCK_INVOICE
+    } else {
+      // 프로덕션 환경에서는 not-found.tsx 표시
+      notFound()
+    }
   }
 
   return (

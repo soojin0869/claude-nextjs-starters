@@ -6,35 +6,11 @@
  */
 
 import type { Invoice } from '@/lib/types/invoice'
+import { formatDate, formatCurrency } from '@/lib/utils/format'
 import { InvoiceItemTable } from './invoice-item-table'
 
 interface InvoiceViewProps {
   invoice: Invoice
-}
-
-/**
- * 날짜 문자열을 한국식 날짜 형식으로 변환합니다.
- * @example "2026-05-19" → "2026년 5월 19일"
- */
-function formatDate(dateStr: string | null): string {
-  if (!dateStr) return '-'
-  const date = new Date(dateStr)
-  return date.toLocaleDateString('ko-KR', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
-}
-
-/**
- * 금액을 통화 형식으로 변환합니다.
- * @example (1500000, "KRW") → "₩1,500,000"
- */
-function formatCurrency(amount: number, currency: Invoice['currency']): string {
-  return new Intl.NumberFormat('ko-KR', {
-    style: 'currency',
-    currency,
-  }).format(amount)
 }
 
 export function InvoiceView({ invoice }: InvoiceViewProps) {
@@ -80,14 +56,39 @@ export function InvoiceView({ invoice }: InvoiceViewProps) {
         <InvoiceItemTable items={invoice.items} />
       </div>
 
-      {/* 합계 */}
+      {/* 합계 - 소계 / 부가세(10%) / 총액 3단 표시 */}
       <div className="flex justify-end border-t pt-4">
-        <div className="text-right">
-          <p className="text-sm text-gray-500">합계</p>
-          <p className="text-2xl font-bold text-gray-900">
-            {formatCurrency(invoice.totalAmount, invoice.currency)}
-          </p>
-        </div>
+        <table className="text-sm">
+          <tbody>
+            {/* 소계 행 */}
+            <tr>
+              <td className="py-1 pr-8 text-gray-500">소계</td>
+              <td className="py-1 text-right text-gray-900">
+                {formatCurrency(invoice.totalAmount, invoice.currency)}
+              </td>
+            </tr>
+            {/* 부가세(10%) 행 */}
+            <tr>
+              <td className="py-1 pr-8 text-gray-500">부가세 (10%)</td>
+              <td className="py-1 text-right text-gray-900">
+                {formatCurrency(
+                  Math.round(invoice.totalAmount * 0.1),
+                  invoice.currency
+                )}
+              </td>
+            </tr>
+            {/* 총액 행 - 굵게 강조 */}
+            <tr className="border-t">
+              <td className="pt-2 pr-8 font-bold text-gray-900">총액</td>
+              <td className="pt-2 text-right text-xl font-bold text-gray-900">
+                {formatCurrency(
+                  invoice.totalAmount + Math.round(invoice.totalAmount * 0.1),
+                  invoice.currency
+                )}
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
       {/* 메모 */}
