@@ -120,3 +120,16 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  @media print {
+    /* 인쇄 시 숨길 요소 (PDF 다운로드 버튼 등) */
+    .no-print {
+      display: none !important;
+    }
+    /* 인쇄 전용 표시 요소 */
+    .print-only {
+      display: block;
+    }
+  }
+}
