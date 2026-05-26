@@ -15,8 +15,8 @@ export interface InvoiceItem {
   amount: number
 }
 
-/** 견적서 상태 */
-export type InvoiceStatus = '초안' | '발송됨' | '확정됨'
+/** 견적서 상태 (Notion DB의 상태 필드 값을 그대로 사용) */
+export type InvoiceStatus = string
 
 /** 통화 단위 */
 export type InvoiceCurrency = 'KRW' | 'USD'

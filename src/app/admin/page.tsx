@@ -32,9 +32,11 @@ export default async function AdminPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* 헤더 */}
-      <header className="border-b bg-white">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
-          <h1 className="text-xl font-semibold text-gray-900">견적서 관리</h1>
+      <header className="border-b bg-white shadow-sm">
+        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-5">
+          <h1 className="text-xl font-bold tracking-tight text-gray-900">
+            견적서 관리
+          </h1>
           <form action={adminLogoutAction}>
             <Button type="submit" variant="outline" size="sm">
               로그아웃
@@ -44,7 +46,7 @@ export default async function AdminPage() {
       </header>
 
       {/* 메인 콘텐츠 */}
-      <main className="mx-auto max-w-5xl px-4 py-8">
+      <main className="mx-auto max-w-5xl px-6 py-10">
         {/* 데이터 로딩 중에는 TableLoadingSkeleton을 표시하고, 완료 시 InvoiceList 렌더링 */}
         <Suspense fallback={<TableLoadingSkeleton />}>
           <InvoiceList />

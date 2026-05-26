@@ -6,6 +6,7 @@
  */
 
 import type { Metadata } from 'next'
+import { LockIcon } from 'lucide-react'
 import { AdminLoginForm } from '@/components/admin/admin-login-form'
 
 export const metadata: Metadata = {
@@ -15,15 +16,22 @@ export const metadata: Metadata = {
 
 export default function AdminLoginPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 px-4">
       <div className="w-full max-w-sm">
-        <div className="mb-8 text-center">
-          <h1 className="text-2xl font-bold text-gray-900">어드민 로그인</h1>
-          <p className="mt-2 text-sm text-gray-500">
-            견적서 관리 대시보드에 접근하려면 패스워드를 입력해 주세요.
-          </p>
+        <div className="rounded-xl border bg-white p-8 shadow-md">
+          <div className="mb-8 text-center">
+            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100">
+              <LockIcon className="h-6 w-6 text-gray-600" />
+            </div>
+            <h1 className="text-2xl font-bold tracking-tight text-gray-900">
+              어드민 로그인
+            </h1>
+            <p className="mt-2 text-sm text-gray-500">
+              견적서 관리 대시보드에 접근하려면 패스워드를 입력해 주세요.
+            </p>
+          </div>
+          <AdminLoginForm />
         </div>
-        <AdminLoginForm />
       </div>
     </div>
   )

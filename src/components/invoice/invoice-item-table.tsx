@@ -19,35 +19,35 @@ export function InvoiceItemTable({ items }: InvoiceItemTableProps) {
   }
 
   return (
-    <div className="overflow-hidden rounded-md border">
+    <div className="overflow-hidden rounded-lg border">
       <table className="w-full text-sm">
-        <thead className="bg-gray-50">
+        <thead className="bg-muted/40">
           <tr>
-            <th className="px-4 py-3 text-left font-medium text-gray-600">
+            <th className="text-muted-foreground px-6 py-4 text-left text-xs font-semibold tracking-wider uppercase">
               항목명
             </th>
-            <th className="px-4 py-3 text-right font-medium text-gray-600">
+            <th className="text-muted-foreground px-6 py-4 text-right text-xs font-semibold tracking-wider uppercase">
               수량
             </th>
-            <th className="px-4 py-3 text-right font-medium text-gray-600">
+            <th className="text-muted-foreground px-6 py-4 text-right text-xs font-semibold tracking-wider uppercase">
               단가
             </th>
-            <th className="px-4 py-3 text-right font-medium text-gray-600">
+            <th className="text-muted-foreground px-6 py-4 text-right text-xs font-semibold tracking-wider uppercase">
               금액
             </th>
           </tr>
         </thead>
-        <tbody className="divide-y">
+        <tbody className="divide-y bg-white">
           {items.map(item => (
-            <tr key={item.id} className="bg-white">
-              <td className="px-4 py-3 text-gray-900">{item.name}</td>
-              <td className="px-4 py-3 text-right text-gray-700">
+            <tr key={item.id} className="hover:bg-muted/30 transition-colors">
+              <td className="px-6 py-4 text-gray-900">{item.name}</td>
+              <td className="px-6 py-4 text-right text-gray-600">
                 {formatNumber(item.quantity)}
               </td>
-              <td className="px-4 py-3 text-right text-gray-700">
+              <td className="px-6 py-4 text-right text-gray-600">
                 {formatNumber(item.unitPrice)}
               </td>
-              <td className="px-4 py-3 text-right font-medium text-gray-900">
+              <td className="px-6 py-4 text-right font-semibold text-gray-900">
                 {formatNumber(item.amount)}
               </td>
             </tr>

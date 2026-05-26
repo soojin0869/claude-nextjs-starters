@@ -7,13 +7,8 @@
  */
 
 import { redirect } from 'next/navigation'
-import { z } from 'zod'
 import { deleteAdminCookie, setAdminCookie } from '@/lib/auth/admin-auth'
-
-/** 로그인 폼 입력 스키마 */
-const loginSchema = z.object({
-  password: z.string().min(1, '비밀번호를 입력해 주세요.'),
-})
+import { loginSchema } from '@/lib/schemas/auth'
 
 /** Server Action 응답 타입 */
 export interface ActionResult {

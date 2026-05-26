@@ -39,3 +39,12 @@ Thumbs.db
 
 # Generated files
 next-env.d.ts
+
+# 외부 도구 데이터
+shrimp_data/
+*.code-workspace
+.claude/
+.playwright-mcp/
+
+# 서드파티 UMD 라이브러리 (번들러 우회용)
+public/libs/

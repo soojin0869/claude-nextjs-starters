@@ -1,36 +1,115 @@
 /**
- * PDF 생성 유틸
+ * PDF 생성 유틸 (F003)
  *
- * html2canvas + jspdf를 사용해 렌더링된 DOM을 캡처하여 PDF를 생성합니다. (F003)
- * 브라우저 클라이언트 측에서만 실행되는 함수입니다.
- *
- * 설치: npm install html2canvas jspdf
+ * html-to-image + jspdf UMD 빌드를 public/libs에서 동적 로딩하여 PDF를 생성합니다.
+ * html-to-image는 SVG foreignObject 방식으로 브라우저가 CSS를 직접 렌더링하므로
+ * TailwindCSS v4의 oklch/lab 색상 함수를 html2canvas와 달리 네이티브하게 지원합니다.
  */
 
-// TODO: html2canvas, jspdf 설치 후 아래 주석을 해제하세요
-// import html2canvas from 'html2canvas'
-// import jsPDF from 'jspdf'
+declare global {
+  interface Window {
+    htmlToImage: {
+      toCanvas: (
+        element: HTMLElement,
+        options?: { pixelRatio?: number; cacheBust?: boolean }
+      ) => Promise<HTMLCanvasElement>
+    }
+    jspdf: {
+      jsPDF: new (options: {
+        orientation: string
+        unit: string
+        format: string
+      }) => {
+        internal: {
+          pageSize: { getWidth: () => number; getHeight: () => number }
+        }
+        addPage: () => void
+        addImage: (
+          data: string,
+          format: string,
+          x: number,
+          y: number,
+          w: number,
+          h: number
+        ) => void
+        save: (filename: string) => void
+      }
+    }
+  }
+}
+
+function loadScript(src: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (document.querySelector(`script[src="${src}"]`)) {
+      resolve()
+      return
+    }
+    const script = document.createElement('script')
+    script.src = src
+    script.onload = () => resolve()
+    script.onerror = () => reject(new Error(`Failed to load script: ${src}`))
+    document.head.appendChild(script)
+  })
+}
 
 /**
  * 특정 DOM 엘리먼트를 PDF로 생성하여 다운로드합니다.
+ * data-pdf-hide 속성이 있는 엘리먼트는 캡처 중 임시로 숨겨집니다.
+ *
  * @param elementId - PDF로 변환할 DOM 엘리먼트의 id
- * @param fileName - 다운로드될 PDF 파일명 (예: "견적서_2026-05.pdf")
+ * @param fileName - 다운로드될 PDF 파일명 (예: "견적서-2026-05-26.pdf")
  */
 export async function generatePdf(
   elementId: string,
   fileName: string
 ): Promise<void> {
-  // TODO: html2canvas, jspdf 설치 후 구현
-  // 1. document.getElementById(elementId) 로 엘리먼트 선택
-  // 2. html2canvas(element, { scale: 2 }) 로 고해상도 캔버스 생성
-  // 3. new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' }) 인스턴스 생성
-  // 4. pdf.addImage(...) 로 캔버스 이미지를 PDF에 추가
-  // 5. pdf.save(fileName) 으로 다운로드 트리거
+  const element = document.getElementById(elementId)
+  if (!element) throw new Error(`Element #${elementId} not found`)
 
-  void elementId
-  void fileName
+  await Promise.all([
+    loadScript('/libs/html-to-image.js'),
+    loadScript('/libs/jspdf.umd.min.js'),
+  ])
 
-  throw new Error(
-    'PDF 생성 기능은 html2canvas, jspdf 패키지 설치 후 구현 예정입니다.'
-  )
+  // data-pdf-hide 속성 엘리먼트를 캡처 전 임시 숨김
+  const hideEls = element.querySelectorAll<HTMLElement>('[data-pdf-hide]')
+  hideEls.forEach(el => {
+    el.dataset.prevVisibility = el.style.visibility
+    el.style.visibility = 'hidden'
+  })
+
+  try {
+    const canvas = await window.htmlToImage.toCanvas(element, {
+      pixelRatio: 2,
+      cacheBust: true,
+    })
+
+    const imgData = canvas.toDataURL('image/png')
+    const pdf = new window.jspdf.jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4',
+    })
+
+    const pageW = pdf.internal.pageSize.getWidth()
+    const pageH = pdf.internal.pageSize.getHeight()
+    const imgW = pageW
+    const imgH = (canvas.height * pageW) / canvas.width
+
+    let page = 0
+    let remaining = imgH
+    while (remaining > 0) {
+      if (page > 0) pdf.addPage()
+      pdf.addImage(imgData, 'PNG', 0, -page * pageH, imgW, imgH)
+      remaining -= pageH
+      page++
+    }
+
+    pdf.save(fileName)
+  } finally {
+    hideEls.forEach(el => {
+      el.style.visibility = el.dataset.prevVisibility ?? ''
+      delete el.dataset.prevVisibility
+    })
+  }
 }
