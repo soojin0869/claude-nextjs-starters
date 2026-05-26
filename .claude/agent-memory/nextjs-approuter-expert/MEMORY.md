@@ -1,0 +1,1 @@
+- [Notion SDK v5 API 변경](project-notion-sdk-v5.md) — databases.query → dataSources.query로 변경됨, in_trash로 삭제 확인

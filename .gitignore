@@ -39,3 +39,15 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# 개발 도구 임시 파일
+shrimp_data/
+*.code-workspace
+claude
+
+# Playwright MCP 세션 아티팩트
+.playwright-mcp/
+
+# 루트 레벨 스크린샷 (Playwright 테스트 산출물)
+admin-login.png
+invoice-page*.png
