@@ -5,13 +5,24 @@
  * 별도 인증 라이브러리 없이 Next.js 기본 기능으로 구현합니다.
  */
 
+import { createHmac } from 'crypto'
 import { cookies } from 'next/headers'
 
 /** 어드민 인증 쿠키 이름 */
 export const ADMIN_COOKIE_NAME = 'admin_session'
 
 /**
+ * ADMIN_PASSWORD를 secret으로 사용한 HMAC-SHA256 서명 토큰을 생성합니다.
+ * 고정된 페이로드('admin-session')에 서명하여 위변조를 방지합니다.
+ */
+function generateSessionToken(): string {
+  const secret = process.env.ADMIN_PASSWORD ?? ''
+  return createHmac('sha256', secret).update('admin-session').digest('hex')
+}
+
+/**
  * 현재 요청의 어드민 인증 쿠키를 검증합니다.
+ * HMAC 서명 값과 비교하여 위변조된 쿠키를 거부합니다.
  * @returns 인증된 어드민이면 true, 아니면 false
  */
 export async function isAdminAuthenticated(): Promise<boolean> {
@@ -22,9 +33,7 @@ export async function isAdminAuthenticated(): Promise<boolean> {
     return false
   }
 
-  // TODO: 쿠키 값 검증 로직 구현
-  // 단순 값 비교 또는 서명된 토큰 검증 방식 선택
-  return sessionCookie.value === 'authenticated'
+  return sessionCookie.value === generateSessionToken()
 }
 
 /**
@@ -33,7 +42,7 @@ export async function isAdminAuthenticated(): Promise<boolean> {
  */
 export async function setAdminCookie(): Promise<void> {
   const cookieStore = await cookies()
-  cookieStore.set(ADMIN_COOKIE_NAME, 'authenticated', {
+  cookieStore.set(ADMIN_COOKIE_NAME, generateSessionToken(), {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',

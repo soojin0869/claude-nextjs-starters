@@ -9,7 +9,7 @@
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import { getInvoices } from '@/lib/notion/get-invoices'
-import { InvoiceListTable } from '@/components/admin/invoice-list-table'
+import { InvoiceListWithFilter } from '@/components/admin/invoice-list-with-filter'
 import { TableLoadingSkeleton } from '@/components/common/loading'
 import { adminLogoutAction } from '@/actions/admin-auth-actions'
 import { Button } from '@/components/ui/button'
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
  */
 async function InvoiceList() {
   const invoices = await getInvoices()
-  return <InvoiceListTable invoices={invoices} />
+  return <InvoiceListWithFilter invoices={invoices} />
 }
 
 export default async function AdminPage() {

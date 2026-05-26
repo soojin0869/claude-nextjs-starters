@@ -7,6 +7,7 @@
  * 항목(항목명/수량/단가/금액)은 별도 DB의 relation 페이지에서 조회합니다.
  */
 
+import { unstable_cache } from 'next/cache'
 import type { Invoice, InvoiceItem } from '@/lib/types/invoice'
 import type { NotionPropertyMap } from '@/lib/types/notion'
 
@@ -45,12 +46,7 @@ async function fetchInvoiceItems(itemIds: string[]): Promise<InvoiceItem[]> {
   return items
 }
 
-/**
- * Notion 페이지 ID로 견적서 단건을 조회합니다.
- * @param id - Notion 페이지 ID
- * @returns 견적서 데이터 또는 null (존재하지 않는 경우)
- */
-export async function getInvoice(id: string): Promise<Invoice | null> {
+async function fetchInvoice(id: string): Promise<Invoice | null> {
   try {
     const page = await notion.pages.retrieve({ page_id: id })
 
@@ -98,3 +94,13 @@ export async function getInvoice(id: string): Promise<Invoice | null> {
     throw error
   }
 }
+
+/**
+ * Notion 페이지 ID로 견적서 단건을 조회합니다.
+ * @param id - Notion 페이지 ID
+ * @returns 견적서 데이터 또는 null (존재하지 않는 경우)
+ */
+export const getInvoice = unstable_cache(fetchInvoice, ['invoice'], {
+  revalidate: 60,
+  tags: ['invoice'],
+})

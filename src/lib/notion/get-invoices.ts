@@ -9,6 +9,7 @@
  * Notion REST API에 직접 fetch를 사용합니다.
  */
 
+import { unstable_cache } from 'next/cache'
 import type { InvoiceSummary } from '@/lib/types/invoice'
 import type { NotionPropertyMap } from '@/lib/types/notion'
 
@@ -45,7 +46,7 @@ interface NotionQueryResponse {
  *
  * @returns 견적서 요약 목록
  */
-export async function getInvoices(): Promise<InvoiceSummary[]> {
+async function fetchInvoices(): Promise<InvoiceSummary[]> {
   const NOTION_API_KEY = process.env.NOTION_API_KEY ?? ''
 
   try {
@@ -63,8 +64,7 @@ export async function getInvoices(): Promise<InvoiceSummary[]> {
           // 실제 Notion DB 속성명은 한국어 '발행일' (영문 매핑 없음)
           sorts: [{ property: '발행일', direction: 'descending' }],
         }),
-        // Next.js 캐시: 어드민에서 변경 시 갱신될 수 있도록 캐시 없음
-        cache: 'no-store',
+        cache: 'no-store', // unstable_cache가 상위에서 캐싱 담당
       }
     )
 
@@ -123,3 +123,8 @@ export async function getInvoices(): Promise<InvoiceSummary[]> {
     throw error
   }
 }
+
+export const getInvoices = unstable_cache(fetchInvoices, ['invoices'], {
+  revalidate: 30,
+  tags: ['invoices'],
+})

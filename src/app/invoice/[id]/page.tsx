@@ -10,6 +10,9 @@ import { notFound } from 'next/navigation'
 import { getInvoice } from '@/lib/notion/get-invoice'
 import { InvoiceView } from '@/components/invoice/invoice-view'
 import { PdfDownloadButton } from '@/components/invoice/pdf-download-button'
+import { formatCurrency } from '@/lib/utils/format'
+
+export const revalidate = 60
 
 interface InvoicePageProps {
   params: Promise<{ id: string }>
@@ -26,9 +29,22 @@ export async function generateMetadata({
     return { title: '견적서를 찾을 수 없습니다' }
   }
 
+  const title = `${invoice.title} | 견적서 뷰어`
+  const description = `${invoice.clientName}님께 발행된 견적서입니다. 총액: ${formatCurrency(invoice.totalAmount, invoice.currency)}`
+
   return {
-    title: invoice.title,
-    description: `${invoice.clientName} 앞으로 발행된 견적서입니다.`,
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: 'article',
+    },
+    twitter: {
+      card: 'summary',
+      title,
+      description,
+    },
   }
 }
 

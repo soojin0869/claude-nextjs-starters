@@ -6,7 +6,9 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import { ADMIN_COOKIE_NAME } from '@/lib/auth/admin-auth'
+
+// crypto 모듈은 Edge Runtime 비지원이므로 admin-auth.ts를 직접 import하지 않음
+const ADMIN_COOKIE_NAME = 'admin_session'
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
@@ -16,7 +18,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // /admin 하위 경로 접근 시 쿠키 검증
+  // /admin 하위 경로 접근 시 쿠키 존재 여부 확인 (값 검증은 Server Component에서 수행)
   if (pathname.startsWith('/admin')) {
     const sessionCookie = request.cookies.get(ADMIN_COOKIE_NAME)
 

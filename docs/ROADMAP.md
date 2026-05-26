@@ -160,25 +160,25 @@
   - ✅ 콘솔/네트워크 에러 모니터링 및 회귀 방지 시나리오 정리
   - ✅ 모바일 뷰포트에서의 견적서 페이지·PDF 동작 확인
 
-### Phase 4: 고급 기능 및 최적화
+### Phase 4: 고급 기능 및 최적화 ✅
 
-- **Task 011: 사용자 경험 향상 및 메타데이터 강화**
-  - 견적서 페이지 OpenGraph 이미지(og-image) 및 SNS 공유 메타 최적화
-  - 견적서 페이지 접근 시 last-modified 헤더 또는 ISR 옵션 적용 검토
-  - 어드민 대시보드 검색/필터링 기능 추가 (수신자명, 상태별)
-  - 견적서 상태 시각적 뱃지 시스템 도입 (초안/발송/확정 등)
-  - 다국어 또는 통화 옵션 기반 포맷 확장 가능성 검토
+- **Task 011: 사용자 경험 향상 및 메타데이터 강화** ✅ - 완료
+  - ✅ 견적서 페이지 OpenGraph 이미지(og-image) 및 SNS 공유 메타 최적화
+  - ✅ 견적서 페이지 접근 시 last-modified 헤더 또는 ISR 옵션 적용 검토
+  - ✅ 어드민 대시보드 검색/필터링 기능 추가 (수신자명, 상태별)
+  - ✅ 견적서 상태 시각적 뱃지 시스템 도입 (초안/발송/확정 등)
+  - ✅ 다국어 또는 통화 옵션 기반 포맷 확장 가능성 검토
 
-- **Task 012: 성능 최적화 및 보안 강화**
-  - Notion API 호출 캐싱 전략 적용 (`unstable_cache` 또는 Next.js Data Cache)
-  - 어드민 쿠키 secret 검증을 위한 HMAC 서명 적용 검토
-  - CSP 헤더 및 보안 미들웨어 설정 (`next.config.ts` headers)
-  - Lighthouse 측정 및 핵심 웹 바이탈(LCP/CLS/INP) 개선
-  - 번들 분석(`@next/bundle-analyzer`)으로 PDF 라이브러리 코드 스플리팅 적용
+- **Task 012: 성능 최적화 및 보안 강화** ✅ - 완료
+  - ✅ Notion API 호출 캐싱 전략 적용 (`unstable_cache` 또는 Next.js Data Cache)
+  - ✅ 어드민 쿠키 secret 검증을 위한 HMAC 서명 적용 검토
+  - ✅ CSP 헤더 및 보안 미들웨어 설정 (`next.config.ts` headers)
+  - ✅ Lighthouse 측정 및 핵심 웹 바이탈(LCP/CLS/INP) 개선
+  - ✅ 번들 분석(`@next/bundle-analyzer`)으로 PDF 라이브러리 코드 스플리팅 적용
 
-- **Task 013: 배포 및 운영 환경 구성**
-  - Vercel 프로젝트 연결 및 환경변수(NOTION_TOKEN, ADMIN_PASSWORD 등) 설정
-  - 프리뷰/프로덕션 도메인 분리 및 커스텀 도메인 연결
-  - 에러 모니터링 도구(Sentry 또는 Vercel Analytics) 연동
-  - GitHub Actions로 lint/typecheck/build CI 파이프라인 구성
-  - 운영 런북(.md) 작성: 환경변수 재발급, Notion 권한 갱신, 장애 대응 절차
+- **Task 013: 배포 및 운영 환경 구성** ✅ - 완료
+  - ✅ Vercel 프로젝트 연결 및 환경변수(NOTION_TOKEN, ADMIN_PASSWORD 등) 설정
+  - ✅ 프리뷰/프로덕션 도메인 분리 및 커스텀 도메인 연결
+  - ✅ 에러 모니터링 도구(Sentry 또는 Vercel Analytics) 연동
+  - ✅ GitHub Actions로 lint/typecheck/build CI 파이프라인 구성
+  - ✅ 운영 런북(.md) 작성: 환경변수 재발급, Notion 권한 갱신, 장애 대응 절차
