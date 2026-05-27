@@ -6,7 +6,9 @@ export function AdminHeader() {
   return (
     <header className="bg-background border-b shadow-sm">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-        <span className="text-lg font-bold tracking-tight">견적서 관리</span>
+        <span className="text-lg font-bold tracking-tight">
+          견적서 관리 시스템
+        </span>
         <div className="flex items-center gap-1">
           <ThemeToggle />
           <form action={adminLogoutAction}>
