@@ -119,7 +119,7 @@ export function InvoiceListWithFilter({
         open={!!selected}
         onOpenChange={open => !open && setSelected(null)}
       >
-        <SheetContent className="w-full sm:max-w-md">
+        <SheetContent className="w-full px-4 pb-6 sm:max-w-md">
           {selected && (
             <>
               <SheetHeader>
