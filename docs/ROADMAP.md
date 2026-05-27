@@ -182,3 +182,40 @@
   - ✅ 에러 모니터링 도구(Sentry 또는 Vercel Analytics) 연동
   - ✅ GitHub Actions로 lint/typecheck/build CI 파이프라인 구성
   - ✅ 운영 런북(.md) 작성: 환경변수 재발급, Notion 권한 갱신, 장애 대응 절차
+
+### Phase 5: 고도화
+
+- **Task 014: 어드민 레이아웃 고도화** - 높음
+  - 어드민 전용 레이아웃 컴포넌트(`app/admin/layout.tsx`) 신설 및 공통 네비게이션 골격 구성
+  - 사이드바(`components/admin/admin-sidebar.tsx`) 또는 상단 헤더(`components/admin/admin-header.tsx`) 네비게이션 구현 (로고·메뉴·로그아웃 통합)
+  - 견적서 목록 뷰 전환 기능 구현: 테이블 뷰 ↔ 카드 뷰 토글 버튼 및 상태 보존(localStorage 또는 쿠키)
+  - `components/admin/invoice-list-card.tsx` 신규 컴포넌트 작성 (카드 그리드 레이아웃, 반응형 컬럼)
+  - 견적서 상태별 필터 탭(`Tabs`) 추가: 전체 / 대기 / 발송됨 / 확정됨 - 클라이언트 측 필터링 또는 URL 쿼리 연동
+  - 견적서 클릭 시 상세 미리보기 모달(`Dialog`) 또는 슬라이드 패널(`Sheet`) 구현 - 핵심 메타데이터·총액·공유 URL 표시
+  - 어드민 레이아웃에 반응형 디자인 적용 (모바일에서는 햄버거 메뉴로 사이드바 토글)
+  - `app/admin/login/page.tsx`는 어드민 레이아웃을 적용하지 않도록 라우트 그룹 또는 조건부 렌더링 처리
+  - **테스트 체크리스트 (Playwright MCP)**:
+    - 어드민 레이아웃이 `/admin` 경로에서만 렌더링되고 로그인 페이지에는 미적용되는지 확인
+    - 뷰 전환 버튼 클릭 시 테이블 뷰와 카드 뷰가 정상 토글되고 새로고침 후에도 상태가 유지되는지 확인
+    - 상태별 필터 탭 클릭 시 해당 상태의 견적서만 노출되는지 확인
+    - 견적서 항목 클릭 시 미리보기 모달/패널이 열리고 닫히는지 확인
+    - 모바일 뷰포트에서 사이드바가 햄버거 메뉴로 토글되는지 확인
+
+- **Task 015: 다크모드 구현** - 중간
+  - `next-themes` 라이브러리 의존성 추가 및 `ThemeProvider` 래퍼 구성 (`components/providers/theme-provider.tsx`)
+  - 루트 레이아웃(`app/layout.tsx`)에 `ThemeProvider` 적용 및 `suppressHydrationWarning` 설정
+  - TailwindCSS v4 다크모드 설정 검증 (`@custom-variant dark`) 및 디자인 토큰의 다크 변형 정의
+  - 다크모드 토글 버튼 컴포넌트(`components/common/theme-toggle.tsx`) 구현 - 라이트/다크/시스템 3단계 토글
+  - 어드민 헤더(또는 사이드바) 우측에 테마 토글 버튼 배치
+  - 시스템 다크모드 자동 감지(`enableSystem`) 활성화 및 사용자 선택값 localStorage 저장
+  - 모든 페이지(견적서, 어드민, 로그인, not-found)에서 다크모드 색상 일관성 확인 및 `dark:` 클래스 보강
+  - 견적서 PDF 다운로드 시에는 라이트 모드 강제 적용 (PDF 가독성 보장)
+  - 인쇄(`@media print`) 시 라이트 모드 강제 적용
+  - shadcn/ui 컴포넌트들의 다크모드 변형 검증 (button, card, table, dialog, tabs 등)
+  - **테스트 체크리스트 (Playwright MCP)**:
+    - 테마 토글 버튼 클릭 시 라이트 → 다크 → 시스템 순으로 정상 전환되는지 확인
+    - 페이지 새로고침 후에도 선택한 테마가 유지되는지 확인 (localStorage)
+    - OS 다크모드 설정 변경 시 `시스템` 옵션에서 자동 반영되는지 확인
+    - 다크모드에서 모든 페이지의 텍스트 가독성과 대비가 적절한지 확인
+    - PDF 다운로드 결과물이 다크모드 영향 없이 라이트 모드로 출력되는지 확인
+    - 초기 렌더 시 FOUC(Flash of Unstyled Content) 없이 즉시 적용되는지 확인
