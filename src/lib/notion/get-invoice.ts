@@ -79,13 +79,15 @@ async function fetchInvoice(id: string): Promise<Invoice | null> {
 
     return invoice
   } catch (error) {
-    const isNotFound =
-      typeof error === 'object' &&
-      error !== null &&
-      'code' in error &&
-      (error as { code: string }).code === 'object_not_found'
+    const errorCode =
+      typeof error === 'object' && error !== null && 'code' in error
+        ? (error as { code: string }).code
+        : null
 
-    if (isNotFound) return null
+    // 존재하지 않는 페이지 또는 잘못된 ID 형식 → 404 처리
+    if (errorCode === 'object_not_found' || errorCode === 'validation_error') {
+      return null
+    }
 
     if (process.env.NODE_ENV === 'development') {
       console.warn('[getInvoice] 개발환경 오류, null 반환:', error)
