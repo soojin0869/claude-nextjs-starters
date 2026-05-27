@@ -65,7 +65,8 @@ export default async function InvoicePage({ params }: InvoicePageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 print:bg-white print:py-0">
+    // 견적서 페이지는 항상 라이트모드 — PDF 일관성 및 공식 문서 특성 유지
+    <div className="light min-h-screen bg-gray-50 py-8 print:bg-white print:py-0">
       <div className="mx-auto max-w-4xl px-6">
         {/* PDF 다운로드 버튼 (인쇄 시 숨김) */}
         <div className="mb-6 flex justify-end print:hidden">

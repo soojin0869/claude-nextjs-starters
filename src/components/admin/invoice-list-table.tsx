@@ -14,15 +14,21 @@ import { CopyUrlButton } from './copy-url-button'
 
 interface InvoiceListTableProps {
   invoices: InvoiceSummary[]
+  onSelect?: (invoice: InvoiceSummary) => void
 }
 
-export function InvoiceListTable({ invoices }: InvoiceListTableProps) {
+export function InvoiceListTable({
+  invoices,
+  onSelect,
+}: InvoiceListTableProps) {
   if (invoices.length === 0) {
     return (
-      <div className="rounded-xl border bg-white px-6 py-16 text-center">
-        <FileTextIcon className="mx-auto mb-4 h-10 w-10 text-gray-300" />
-        <p className="font-medium text-gray-500">등록된 견적서가 없습니다.</p>
-        <p className="mt-1 text-sm text-gray-400">
+      <div className="bg-card rounded-xl border px-6 py-16 text-center">
+        <FileTextIcon className="text-muted-foreground/40 mx-auto mb-4 h-10 w-10" />
+        <p className="text-muted-foreground font-medium">
+          등록된 견적서가 없습니다.
+        </p>
+        <p className="text-muted-foreground/70 mt-1 text-sm">
           Notion 데이터베이스에 견적서를 추가해 주세요.
         </p>
       </div>
@@ -30,7 +36,7 @@ export function InvoiceListTable({ invoices }: InvoiceListTableProps) {
   }
 
   return (
-    <div className="overflow-hidden rounded-xl border bg-white shadow-sm">
+    <div className="bg-card overflow-hidden rounded-xl border shadow-sm">
       <table className="w-full text-sm">
         <thead className="bg-muted/40 border-b">
           <tr>
@@ -58,22 +64,26 @@ export function InvoiceListTable({ invoices }: InvoiceListTableProps) {
           {invoices.map(invoice => (
             <tr
               key={invoice.id}
-              className="hover:bg-muted/30 transition-colors"
+              className={`hover:bg-muted/30 transition-colors ${onSelect ? 'cursor-pointer' : ''}`}
+              onClick={() => onSelect?.(invoice)}
             >
               <td className="px-6 py-4 font-medium">
                 <Link
                   href={`/invoice/${invoice.id}`}
                   target="_blank"
                   className="text-blue-600 hover:underline"
+                  onClick={e => e.stopPropagation()}
                 >
                   {invoice.title}
                 </Link>
               </td>
-              <td className="px-6 py-4 text-gray-700">{invoice.clientName}</td>
-              <td className="px-6 py-4 text-gray-500">
+              <td className="text-muted-foreground px-6 py-4">
+                {invoice.clientName}
+              </td>
+              <td className="text-muted-foreground px-6 py-4">
                 {formatDate(invoice.issueDate)}
               </td>
-              <td className="px-6 py-4 text-right font-medium text-gray-900">
+              <td className="px-6 py-4 text-right font-medium">
                 {formatCurrency(invoice.totalAmount, invoice.currency)}
               </td>
               <td className="px-6 py-4 text-center">
@@ -83,7 +93,10 @@ export function InvoiceListTable({ invoices }: InvoiceListTableProps) {
                   {invoice.status}
                 </span>
               </td>
-              <td className="px-6 py-4 text-center">
+              <td
+                className="px-6 py-4 text-center"
+                onClick={e => e.stopPropagation()}
+              >
                 <CopyUrlButton invoiceId={invoice.id} />
               </td>
             </tr>

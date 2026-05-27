@@ -78,6 +78,11 @@ export async function generatePdf(
     el.style.visibility = 'hidden'
   })
 
+  // PDF는 항상 라이트모드로 출력 — 다크모드 클래스 임시 제거
+  const root = document.documentElement
+  const isDark = root.classList.contains('dark')
+  if (isDark) root.classList.remove('dark')
+
   try {
     const canvas = await window.htmlToImage.toCanvas(element, {
       pixelRatio: 2,
@@ -107,6 +112,7 @@ export async function generatePdf(
 
     pdf.save(fileName)
   } finally {
+    if (isDark) root.classList.add('dark')
     hideEls.forEach(el => {
       el.style.visibility = el.dataset.prevVisibility ?? ''
       delete el.dataset.prevVisibility
